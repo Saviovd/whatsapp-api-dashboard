@@ -24,11 +24,41 @@ export default function Drivers() {
     loadDrivers();
   }, []);
 
+  const handleUpdateDrivers = async () => {
+    setLoading(true);
+    try {
+      const data = await fetchDrivers();
+      setDrivers(data.drivers);
+    } catch (error) {
+      console.error('Erro ao atualizar motoristas:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleExport = () => {
+    console.log('Exportando dados...');
+  };
+
   return (
     <Container>
       <Sidebar />
       <MainContent>
         <h1 className="text-2xl font-bold">Gerenciamento de motoristas</h1>
+
+        <div className="flex justify-end gap-2 items-center mt-4">
+          <button
+            onClick={handleUpdateDrivers}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          >
+            Atualizar Lista
+          </button>
+
+          <button onClick={handleExport} className="bg-green-500 text-white px-4 py-2 rounded-md">
+            Exportar
+          </button>
+        </div>
+
         <DriverTable drivers={drivers} loading={loading} />
       </MainContent>
     </Container>

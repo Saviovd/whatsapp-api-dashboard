@@ -9,6 +9,7 @@ export const SidebarContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   background-color: #1f3e5b;
+  position: fixed;
   ul {
     list-style-type: none;
     padding: 0;
