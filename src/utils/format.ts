@@ -23,6 +23,7 @@ export const formatPhone = (phone: string): string => {
   return phone;
 };
 
+// DD/MM/AAAA
 export const formatDate = (date?: string): string => {
   if (!date) {
     return 'Data não definida';
@@ -33,4 +34,11 @@ export const formatDate = (date?: string): string => {
     month: '2-digit',
     year: 'numeric',
   });
+};
+
+// AAAA-MM-DD
+export const formatDateToInput = (date: string) => {
+  if (!date) return '';
+  const [day, month, year] = date.split('/');
+  return `${year}-${month}-${day}`;
 };
