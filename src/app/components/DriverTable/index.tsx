@@ -1,6 +1,6 @@
 import { Driver } from '@/types/driver';
 import { formatCPF, formatDate, formatPhone } from '@/utils/format';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface TableProps {
@@ -9,6 +9,7 @@ interface TableProps {
 }
 
 const DriverTable: React.FC<TableProps> = ({ drivers, loading }) => {
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [openDetails, setOpenDetails] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const driversPerPage = 17;
@@ -23,6 +24,11 @@ const DriverTable: React.FC<TableProps> = ({ drivers, loading }) => {
     (currentPage - 1) * driversPerPage,
     currentPage * driversPerPage
   );
+
+  useEffect(() => {
+    setCurrentPage(1);
+    setLastUpdate(new Date());
+  }, [drivers]);
 
   if (loading) {
     return <p className="text-center text-gray-500">Carregando motoristas...</p>;
@@ -106,6 +112,11 @@ const DriverTable: React.FC<TableProps> = ({ drivers, loading }) => {
             ))}
           </tbody>
         </table>
+        {lastUpdate && (
+          <p className="text-sm text-gray-500 mt-2">
+            Última atualização: {lastUpdate.toLocaleTimeString()}
+          </p>
+        )}
       </div>
 
       <div className="mt-4 flex justify-center items-center gap-2">

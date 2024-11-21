@@ -6,9 +6,12 @@ import { fetchDrivers } from '@/services/whatsapp-api';
 import DriverTable from '../components/DriverTable';
 import DateFilterForm from '../components/DateFilterForm';
 import ActionButtons from '../components/ActionButtons';
+import SortDriverList from '../components/SortDriverList';
+import { Driver } from '@/types/driver';
 
 export default function Drivers() {
-  const [drivers, setDrivers] = useState([]);
+  const [allDrivers, setAllDrivers] = useState<Driver[]>([]);
+  const [drivers, setDrivers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -17,6 +20,7 @@ export default function Drivers() {
     setLoading(true);
     try {
       const data = await fetchDrivers(startDate, endDate);
+      setAllDrivers(data.drivers);
       setDrivers(data.drivers);
     } catch (error) {
       console.error('Erro ao carregar motoristas:', error);
@@ -57,15 +61,17 @@ export default function Drivers() {
       <MainContent>
         <h1 className="text-2xl font-bold">Gerenciamento de motoristas</h1>
         <DateFilterForm
-          startDate={startDate} // No formato AAAA-MM-DD
-          endDate={endDate} // No formato AAAA-MM-DD
-          onStartDateChange={(date) => setStartDate(date)} // Não converta novamente
-          onEndDateChange={(date) => setEndDate(date)} // Não converta novamente
+          startDate={startDate}
+          endDate={endDate}
+          onStartDateChange={(date) => setStartDate(date)}
+          onEndDateChange={(date) => setEndDate(date)}
           onSearch={handleSearch}
           onClear={handleClearDates}
         />
-
-        <ActionButtons onUpdate={handleUpdateDrivers} onExport={handleExport} />
+        <div className="my-4 flex justify-between items-center">
+          <SortDriverList allDrivers={allDrivers} drivers={drivers} setDrivers={setDrivers} />
+          <ActionButtons onUpdate={handleUpdateDrivers} onExport={handleExport} />
+        </div>
         <DriverTable drivers={drivers} loading={loading} />
       </MainContent>
     </Container>
