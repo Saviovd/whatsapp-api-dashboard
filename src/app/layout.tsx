@@ -1,4 +1,5 @@
 import '@/app/styles/globals.css';
+import { AuthProvider } from '@/contexts/AuthContext';
 import StyledComponentsRegistry from '@/lib/registry';
 import type { Metadata } from 'next';
 
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className="">
-        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        <StyledComponentsRegistry>
+          <AuthProvider>{children}</AuthProvider>
+        </StyledComponentsRegistry>
       </body>
     </html>
   );
