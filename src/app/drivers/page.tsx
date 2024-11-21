@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { Container, MainContent } from '../styles/globals';
-import { fetchDrivers } from '@/services/whatsapp-api';
+import { exportDrivers, fetchDrivers } from '@/services/whatsapp-api';
 import DriverTable from '../components/DriverTable';
 import DateFilterForm from '../components/DateFilterForm';
 import ActionButtons from '../components/ActionButtons';
@@ -50,9 +50,18 @@ export default function Drivers() {
     loadDrivers();
   };
 
-  const handleExport = () => {
-    console.log('drivers: ', drivers);
-    console.log('Exportando dados...', startDate, endDate);
+  const handleExport = async () => {
+    try {
+      const response = await exportDrivers({ drivers });
+      const blob = response?.data;
+
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `motoristas_${new Date().toISOString().split('T')[0]}.xlsx`;
+      link.click();
+    } catch (error) {
+      console.error('Erro ao exportar dados:', error);
+    }
   };
 
   return (

@@ -1,3 +1,4 @@
+import { Driver } from '@/types/driver';
 import api from './api';
 
 export const fetchDrivers = async (
@@ -13,6 +14,20 @@ export const fetchDrivers = async (
     return response.data;
   } catch (error) {
     console.error('Erro ao buscar motoristas:', error);
+    throw error;
+  }
+};
+
+export const exportDrivers = async (data: { drivers: Driver[] }) => {
+  try {
+    const response = await api.post('/export-users', data, {
+      responseType: 'blob',
+    });
+    if (response.status === 200) {
+      return response;
+    }
+  } catch (error) {
+    console.error('Erro ao exportar motoristas:', error);
     throw error;
   }
 };
